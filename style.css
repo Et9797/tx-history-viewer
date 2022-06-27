@@ -1,0 +1,49 @@
+a {
+    color: inherit;
+}
+
+a:hover {
+    color: rgb(8, 141, 156);
+}
+
+#flex-container {
+    align-items: center;
+}
+
+#btn-container {
+    margin-bottom: 3rem
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 1.5rem;
+}
+
+.btn:active,
+.btn:focus,
+.btn:active:focus {
+   background-image: none;
+   outline: 0;
+   -webkit-box-shadow: none;
+   box-shadow: none;
+}
+
+.navbar {
+    background-color: #e3f2fd;
+    margin-bottom: 1.5rem;
+}
+
+.navbar-brand {
+    font-size: 34px;
+    font-weight: bold;
+    margin: auto;
+}
+
+.accordion {
+    width: 50%;
+    margin: auto;
+    margin-bottom: 1.5rem;
+}
+
+#export {
+    display: none;
+}

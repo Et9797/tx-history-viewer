@@ -57,6 +57,8 @@ async def fetch_txs(*args):
         return
     
     pyscript.write('wait-txs', '<h4>Fetching transactions...</h4>')
+    spinner = document.querySelector('#spinner')
+    spinner.style.display = 'block'
 
     bech32_addr = str(
         Address.from_primitive(
@@ -98,6 +100,7 @@ async def fetch_txs(*args):
             await asyncio.sleep(2)
         
     pyscript.write('wait-txs', '')
+    spinner.style.display = 'none'
 
     df = await show_table(data)
 
@@ -123,6 +126,8 @@ async def tx_info(tx_hash: str, addr: str) -> tuple:
             'wait-txs',
             '<h4 style="color: red;">Error when fetching txs from Blockfrost, retry after a minute</h4>'
         )
+        spinner = document.querySelector('#spinner')
+        spinner.style.display = 'none'
         raise e
     else:
         tx_details = await res1.json()

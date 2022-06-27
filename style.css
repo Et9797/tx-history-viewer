@@ -47,3 +47,7 @@ a:hover {
 #export {
     display: none;
 }
+
+#spinner {
+    display: none;
+}

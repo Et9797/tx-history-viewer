@@ -169,7 +169,7 @@ def date_from_slot(slot: int):
     return datetime.utcfromtimestamp(timestamp).strftime('%m-%d-%Y %H:%M:%S')
 
     
-async def show_table(data: tuple):
+async def show_table(data: List[tuple]):
     pyscript.write('table', '')
     df = pd.DataFrame(data, columns=["TxId", "Type", "Amount", "Date (UTC)"])
     table = pn.widgets.Tabulator(pagination='remote', page_size=15)

@@ -124,12 +124,12 @@ async def tx_info(tx_hash: str, addr: str) -> tuple:
     inputs_sum = 0
     outputs_sum = 0
     for utxo in utxos:
+        if utxo.get('collateral'):
+            continue
         if utxo['address'] == addr:
             for item in utxo['amount']:
                 if item['unit'] == 'lovelace':
-                    if utxo.get('collateral'):
-                        continue
-                    elif "tx_hash" in utxo:
+                    if "tx_hash" in utxo:
                         # it's an input
                         inputs_sum += int(item['quantity'])
                     else:

@@ -127,8 +127,10 @@ async def tx_info(tx_hash: str, addr: str) -> tuple:
         if utxo['address'] == addr:
             for item in utxo['amount']:
                 if item['unit'] == 'lovelace':
-                    if "tx_hash" in utxo:
-                        # then it's an input
+                    if utxo.get('collateral'):
+                        continue
+                    elif "tx_hash" in utxo:
+                        # it's an input
                         inputs_sum += int(item['quantity'])
                     else:
                         # it's an output
@@ -154,7 +156,6 @@ def date_from_slot(slot: int) -> str:
 
     
 async def show_table(data: List[tuple]) -> pd.DataFrame:
-    pyscript.write('table', '')
     df = pd.DataFrame(data, columns=["TxId", "Type", "Amount", "Date (UTC)"])
     table = pn.widgets.Tabulator(pagination='remote', page_size=15)
     table.value = df

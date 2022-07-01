@@ -34,7 +34,7 @@ BLOCKFROST_URL = 'https://cardano-mainnet.blockfrost.io/api/v0'
 API_KEY = {}
 
 
-async def add_api_key(*args):
+async def add_api_key(*args) -> None:
     API_KEY.clear()
     if not await nami.isEnabled():
         alert("Enable Nami wallet first")
@@ -48,7 +48,7 @@ async def add_api_key(*args):
     API_KEY["project_id"] = api_key
 
 
-async def fetch_txs(*args):
+async def fetch_txs(*args) -> None:
     if not await nami.isEnabled():
         alert("Enable Nami wallet first")
         return
@@ -56,6 +56,7 @@ async def fetch_txs(*args):
         alert("Add Blockfrost API key")
         return
     
+    pyscript.write('table', '')
     pyscript.write('wait-txs', '<h4>Fetching transactions...</h4>')
     spinner = document.querySelector('#spinner')
     spinner.style.display = 'block'
@@ -65,9 +66,9 @@ async def fetch_txs(*args):
             bytes.fromhex((await nami_api.getUsedAddresses())[0])
         )
     )
-    i = 1
     fetched_all_txs = False
     txs = []
+    i = 1
     while not fetched_all_txs:
         r = await pyfetch(
             url = f"{BLOCKFROST_URL}/addresses/{bech32_addr}/transactions?page={i}",
@@ -80,25 +81,8 @@ async def fetch_txs(*args):
         txs.extend(data)
         i += 1
 
-    if len(txs) <= 50:
-        tasks = [ asyncio.create_task(tx_info(tx['tx_hash'], bech32_addr)) for tx in txs ]
-        data: List[tuple] = await asyncio.gather(*tasks)
-    else:
-        # split the txs list into bins of size 50 and wait 2s after each async call to reduce spamming
-        nr_bins = ceil(len(txs) / 50)
-        tasks = []
-        data = []
-        for i in range(nr_bins):
-            for tx in txs[i*50:i*50+50]:
-                tasks.append(
-                    asyncio.create_task(tx_info(tx['tx_hash'], bech32_addr))
-                )
-            data.extend(await asyncio.gather(*tasks))
-            tasks.clear()
-            if i == nr_bins:
-                break
-            await asyncio.sleep(2)
-        
+    data = [ await tx_info(tx["tx_hash"], bech32_addr) for tx in txs ]
+    
     pyscript.write('wait-txs', '')
     spinner.style.display = 'none'
 
@@ -162,14 +146,14 @@ async def tx_info(tx_hash: str, addr: str) -> tuple:
     return (tx_hash, tx_type, net_sum, date)
 
 
-def date_from_slot(slot: int):
+def date_from_slot(slot: int) -> str:
     shelley_unix = 1596491091
     shelley_slot = 4924800
     timestamp = shelley_unix + (slot - shelley_slot)
     return datetime.utcfromtimestamp(timestamp).strftime('%m-%d-%Y %H:%M:%S')
 
     
-async def show_table(data: List[tuple]):
+async def show_table(data: List[tuple]) -> pd.DataFrame:
     pyscript.write('table', '')
     df = pd.DataFrame(data, columns=["TxId", "Type", "Amount", "Date (UTC)"])
     table = pn.widgets.Tabulator(pagination='remote', page_size=15)
@@ -180,7 +164,7 @@ async def show_table(data: List[tuple]):
     return df
     
 
-def export_to_csv(df, export_btn):
+def export_to_csv(df, export_btn) -> None:
     export_btn.href = window.URL.createObjectURL(
         Blob.new(
             [df.to_csv()]

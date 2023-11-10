@@ -1,35 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tx History Viewer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://unpkg.com/@holoviz/panel@0.13.0/dist/bundled/bootstraptemplate/bootstrap.css">
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.9.3/dist/js/tabulator.js"></script>
-    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-2.4.2.js"></script>
-    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.4.2.min.js"></script>
-    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.4.2.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/@holoviz/panel@0.13.0/dist/panel.min.js"></script>
-    <script type="text/javascript">
-      Bokeh.set_log_level("info");
-    </script>
-    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-    <link rel="stylesheet" href="./style.css" />
-    <py-env>
-        - pandas
-        - panel
-        - paths:
-            - ./address.py
-    </py-env>
-</head>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/5.5.2/js/tabulator.min.js" integrity="sha512-oU2NOn7vXb9igwNelYL+57+t+zb3liitNE8/NXg8QFJhBCSvH+dt9+s3H02aM41FUF7WYWx0kPeFV5yIkm1MVA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-3.3.0.js"></script>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-3.3.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-3.3.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@holoviz/panel@1.3.1/dist/panel.min.js"></script>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2023.11.1/core.css" />
+    <script type="module" src="https://pyscript.net/releases/2023.11.1/core.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <py-config>
+        packages = ['pandas', 'panel']
 
+        [[fetch]]
+        files = ['address.py']
+    </py-config>
+</head>
 <body>
     <div class="container">
         <nav class="navbar navbar-light">
@@ -45,29 +37,28 @@
             <div class="accordion-item">
                 <h2 class="accordion-header" id="flush-headingOne">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                        Why might you use this?
+                        Usecase
                     </button>
                 </h2>
                 <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body">There's currently no option to export the transaction history in your Nami wallet, like with Yoroi or Daedalus. 
-                        If you need to file tax returns on your crypto you can use this page to download the entire transaction history of your Nami wallet
-                        in CSV format. You may want to use Koinly for a better UX, however their cheapest plan ($39) has a limit of just 100 transactions!
+                    <div class="accordion-body">
+                        There is currently no option to export your transaction history in Nami wallet. You can use this page to download the entire transaction history of your Nami wallet
+                        in CSV format.
                     </div>
                 </div>
             </div>
             <div class="accordion-item">
                 <h2 class="accordion-header" id="flush-headingTwo">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                        How it works
+                        How to use
                     </button>
                 </h2>
                 <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
                     <div class="accordion-body">
-                        The entire page is built with <code>pyscript</code>. This new library enables running powerful Python packages like <code>pandas</code>,
-                        <code>matplotlib</code> and <code>pycardano</code> directly in the browser, without requiring a backend server such as <code>flask</code>. How to use:
                         <ol>
                             <li>Enable Nami wallet</li>
-                            <li>Create a Blockfrost account and add the API key (mainnet)</li>
+                            <li>Create a BlockFrost account</li> 
+                            <li>Add a mainnet API key</li>
                             <li>View and export transactions to CSV</li>
                         </ol>
                     </div>
@@ -77,17 +68,17 @@
         <div class="d-flex flex-column" id="flex-container">
             <h3 id="wallet">Wallet enabled: False</h3>
             <div id="btn-container">
-                <button type="button" class="btn btn-primary" id="enable-wallet">
+                <button type="button" class="btn btn-primary" id="enable-wallet-btn">
                     <i class="fa-solid fa-austral-sign"></i> &nbsp;Enable wallet
                 </button>
-                <button type="button" class="btn btn-primary" id="api-key">
+                <button type="button" class="btn btn-primary" id="api-key-btn">
                     <i class="fa-solid fa-key"></i> &nbsp;Add API Key
                 </button>
-                <button type="button" class="btn btn-success" id="show-txs">
+                <button type="button" class="btn btn-success" id="show-txs-btn">
                     <i class="fa-solid fa-exchange"></i> &nbsp;Show Transactions
                 </button>
-                <a id="export">
-                    <button type="button" class="btn btn-success" id="export-csv">
+                <a id="export-csv-link">
+                    <button type="button" class="btn btn-success" id="export-csv-btn">
                         <i class="fas fa-file-export"></i> &nbsp;Export to CSV
                     </button>
                 </a>
@@ -95,14 +86,9 @@
             <div id="wait-txs"></div>
             <div class="spinner-border" role="status" id="spinner"></div>
             <div id="table"></div>
-            <h4 id="wait-packages">Please wait until all Python libraries have finished loading...</h4>
+            <h4 id="wait-package-loading">Please wait until all Python libraries have finished loading...</h4>
         </div>
     </div>
-    <py-script src="./txhistory.py"></py-script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
-        crossorigin="anonymous">
-    </script>
+    <script async type="py" src="tx_history.py"></script>
 </body>
-
 </html>
